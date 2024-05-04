@@ -3,15 +3,7 @@ const canvas = new fabric.Canvas('c', {
     height: 600, 
     preserveObjectStacking: true
 });
-const text = new fabric.Text('I am just a random passerby, found mini interesting, the code is open source, and I hope the CTO can add some nice backgrounds.', {
-    left: 10, 
-    top: canvas.height - 40, 
-    fontSize: 16,
-    fill: 'black' 
-});
 
-canvas.add(text);
-canvas.renderAll();
 document.getElementById('upload').addEventListener('change', function (e) {
     const reader = new FileReader();
     reader.onload = function (event) {

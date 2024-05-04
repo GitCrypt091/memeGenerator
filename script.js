@@ -1,6 +1,6 @@
 const canvas = new fabric.Canvas('c', {
-    width: 800,  
-    height: 600, 
+    width: 800,
+    height: 600,
     preserveObjectStacking: true
 });
 
@@ -11,9 +11,9 @@ document.getElementById('upload').addEventListener('change', function (e) {
             let scale = Math.min(
                 canvas.width / img.width,
                 canvas.height / img.height
-            ); 
+            );
 
-            
+
             img.set({
                 originX: 'center',
                 originY: 'center',
@@ -32,16 +32,16 @@ document.getElementById('upload').addEventListener('change', function (e) {
 
 
 const parts = [
-    { url: 'head.png', angle: 90, offsetX: -150, offsetY: -200 }, // 
-    { url: 'left_hand.png', angle: 210, offsetX: -300, offsetY: 0 }, // 
-    { url: 'right_hand.png', angle: 330, offsetX: 300, offsetY: 0 }, // 
-    { url: 'left_foot.png', angle: 270, offsetX: -200, offsetY: 200 }, // 
-    { url: 'right_foot.png', angle: 30, offsetX: 200, offsetY: 200 } // 
+    { url: 'head.png', angle: 0, offsetX: -100, offsetY: -200 }, // 
+    { url: 'left_hand.png', angle: 0, offsetX: -200, offsetY: 0 }, // 
+    { url: 'right_hand.png', angle: 0, offsetX: 200, offsetY: 0 }, // 
+    { url: 'left_foot.png', angle: 0, offsetX: -100, offsetY: 100 }, // 
+    { url: 'right_foot.png', angle: 0, offsetX: 100, offsetY: 100 } // 
 ];
 
 parts.forEach(part => {
     fabric.Image.fromURL(part.url, function (img) {
-        const scale = 0.1; 
+        const scale = 0.28;
         img.set({
             left: (canvas.width / 2) + part.offsetX,
             top: (canvas.height / 2) + part.offsetY,
@@ -51,11 +51,10 @@ parts.forEach(part => {
             hasControls: true
         });
         canvas.add(img);
-    }, { crossOrigin: 'anonymous' }); 
+    }, { crossOrigin: 'anonymous' });
 });
 
 
-// 生成图片
 document.getElementById('generate').addEventListener('click', function () {
     canvas.discardActiveObject();
     canvas.renderAll();

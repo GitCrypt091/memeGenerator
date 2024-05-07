@@ -70,7 +70,7 @@ document.getElementById('addLimbs').addEventListener('click', function () {
 const parts = [
     { url: 'head.png', angle: 0, offsetX: -100, offsetY: -200 },
     { url: 'left_hand.png', angle: 0, offsetX: -200, offsetY: 0 },
-    { url: 'right_hand.png', angle: 0, offsetX: 200, offsetY: 0 },
+    { url: 'right_hand.png', angle: 0, offsetX: 150, offsetY: 0 },
     { url: 'left_foot.png', angle: 0, offsetX: -100, offsetY: 100 },
     { url: 'right_foot.png', angle: 0, offsetX: 100, offsetY: 100 }
 ];

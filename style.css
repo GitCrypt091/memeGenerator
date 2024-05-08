@@ -1,36 +1,76 @@
 body,
 html {
     height: 100%;
-    /* Full height to ensure video covers entire page */
     margin: 0;
-    /* Remove default margin */
     display: flex;
-    /* Flexbox to center content */
     flex-direction: column;
-    /* Stack children vertically */
     align-items: center;
-    /* Center children horizontally */
 }
 
 #background-video {
     position: fixed;
-    /* Positioning relative to the viewport */
     top: 0;
     left: 0;
     width: 100%;
-    /* Cover the full viewport width */
     height: 100%;
-    /* Cover the full viewport height */
     object-fit: cover;
-    /* Cover the area without losing aspect ratio */
     z-index: -1;
-    /* Behind all other content */
 }
 
 canvas {
     z-index: 0;
-    /* Ensure canvas is above the video */
     border: 1px solid #ccc;
-    /* Optional border for visibility */
-    /* White background for drawing */
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+    margin: 10px;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12);
+}
+
+#generate {
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
+}
+
+#replaceWithFull {
+    background: linear-gradient(to right, #21d4fd, #b721ff);
+}
+
+#addLimbs,
+#deleteObject {
+    background: linear-gradient(to right, #08aeea, #2af598);
+}
+
+#toggle-drawing {
+    background: linear-gradient(to right, #f7971e, #ffd200);
+}
+
+#bringToFront {
+    background: linear-gradient(to right, #0093E9, #80D0C7);
+}
+
+@media (max-width: 600px) {
+    button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
 }

@@ -3,8 +3,10 @@ const canvas = new fabric.Canvas('c', {
     height: 600,
     preserveObjectStacking: true
 });
+
 canvas.setBackgroundColor('#fff', canvas.renderAll.bind(canvas));
 
+let hasUploadedImages = false;
 let state = []; // Array to hold the states of canvas
 let mods = 0; // Counter to keep track of states
 
@@ -32,25 +34,57 @@ document.getElementById('undo-drawing').addEventListener('click', function () {
     });
 });
 
+function adjustImageLayers() {
+    let uploadedImages = [];
+    let otherObjects = [];
+    let fullImagePresent = false;
+
+    canvas.getObjects().forEach(obj => {
+        if (obj.type === 'image' && obj.uploaded) {
+            uploadedImages.push(obj);
+        } else if (obj.src === 'full.png') {
+            fullImagePresent = obj;
+        } else {
+            otherObjects.push(obj);
+        }
+    });
+
+    uploadedImages.reverse();
+
+    uploadedImages.forEach(img => {
+        canvas.bringToFront(img);
+    });
+
+    if (fullImagePresent && !hasUploadedImages) {
+        canvas.sendToBack(fullImagePresent);
+    }
+
+    otherObjects.forEach(obj => {
+        canvas.bringToFront(obj);
+    });
+
+    canvas.renderAll();
+}
+
 document.getElementById('upload').addEventListener('change', function (e) {
     const reader = new FileReader();
     reader.onload = function (event) {
         fabric.Image.fromURL(event.target.result, function (img) {
-            const scale = Math.min(
-                canvas.width / img.width,
-                canvas.height / img.height
-            );
+            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
             img.set({
                 originX: 'center',
                 originY: 'center',
-                top: canvas.height / 2,
                 left: canvas.width / 2,
+                top: canvas.height / 2,
                 scaleX: scale,
                 scaleY: scale,
-                selectable: false,
-                evented: false
+                selectable: true,
+                evented: true
             });
-            canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+            canvas.add(img);
+            adjustImageLayers(); // Adjust layers after adding new image
+            saveState();
+            hasUploadedImages = true; // Mark that an image has been uploaded
         });
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -189,4 +223,50 @@ document.getElementById('generate').addEventListener('click', function () {
     } else {
         alert('Popup blocked! Please allow popups for this website.');
     }
+});
+
+document.getElementById('bringToFront').addEventListener('click', function () {
+    const activeObject = canvas.getActiveObject();
+    if (activeObject) {
+        canvas.bringToFront(activeObject);
+        canvas.renderAll();
+    } else {
+        alert("Please select an object to bring to front!");
+    }
+});
+
+document.getElementById('replaceWithFull').addEventListener('click', function () {
+    fabric.Image.fromURL('full.png', function (img) {
+        // Calculate scale to fit the canvas
+        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+        img.set({
+            originX: 'center',
+            originY: 'center',
+            left: canvas.width / 2,
+            top: canvas.height / 2,
+            scaleX: scale,
+            scaleY: scale,
+            selectable: true,
+            evented: true
+        });
+
+        // Remove existing parts
+        canvas.getObjects().forEach(function (obj) {
+            if (obj.type === 'image' && obj.hasControls) {
+                canvas.remove(obj);
+            }
+        });
+
+        // Add the full image
+        canvas.add(img);
+
+        // If there were previously uploaded images, send the new image behind them
+        if (hasUploadedImages) {
+            canvas.sendToBack(img);
+        }
+
+        // Re-adjust layers
+        adjustImageLayers();
+        saveState();
+    });
 });

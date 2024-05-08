@@ -36,7 +36,7 @@ document.getElementById('undo-drawing').addEventListener('click', function () {
 
 function adjustImageLayers() {
     let uploadedImages = [];
-    let otherObjects = [];
+    let scriptGeneratedItems = [];
     let fullImagePresent = false;
 
     canvas.getObjects().forEach(obj => {
@@ -44,8 +44,8 @@ function adjustImageLayers() {
             uploadedImages.push(obj);
         } else if (obj.src === 'full.png') {
             fullImagePresent = obj;
-        } else {
-            otherObjects.push(obj);
+        } else if (obj.scriptGenerated) {
+            scriptGeneratedItems.push(obj);
         }
     });
 
@@ -55,14 +55,15 @@ function adjustImageLayers() {
         canvas.bringToFront(img);
     });
 
-    if (fullImagePresent && !hasUploadedImages) {
+    if (fullImagePresent && hasUploadedImages) {
         canvas.sendToBack(fullImagePresent);
     }
 
-    otherObjects.forEach(obj => {
-        canvas.bringToFront(obj);
+    // Script-generated items always go to the front
+    scriptGeneratedItems.forEach(item => {
+        canvas.bringToFront(item);
     });
-
+    
     canvas.renderAll();
 }
 
@@ -146,9 +147,11 @@ function addParts(isDuplicate = false) {
                 scaleX: scale,
                 scaleY: scale,
                 angle: part.angle,
-                hasControls: true
+                hasControls: true,
+                scriptGenerated: true  // Mark these parts as script-generated
             });
             canvas.add(img);
+            adjustImageLayers();  // Re-adjust layers after adding parts
         }, { crossOrigin: 'anonymous' });
     });
 }
